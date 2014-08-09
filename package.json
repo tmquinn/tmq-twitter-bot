@@ -1,0 +1,22 @@
+{
+  "name": "tmq-twitter-bot",
+  "version": "0.0.0",
+  "description": "TMQ's Twitter Bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@bitbucket.org/TMQuinn/tmq-twitter-bot.git"
+  },
+  "keywords": [
+    "twitter",
+    "bot"
+  ],
+  "author": "Quinn C Hoyer",
+  "license": "ISC",
+  "dependencies": {
+    "twit": "^1.1.18"
+  }
+}
