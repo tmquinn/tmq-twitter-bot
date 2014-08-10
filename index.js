@@ -20,25 +20,31 @@ TwitterBot.prototype = {
 	getSlugs: function (callback) {
 		"use strict";
 
-		this.twit.get('users/suggestions', {}, callback);
+		this.twit.get('users/suggestions', {}, callback || logResponse);
 	},
 
 	suggestUsers: function (slug, callback) {
 		"use strict";
 
-		this.twit.get('users/suggestions/' + slug, { slug: slug }, callback);
+		this.twit.get('users/suggestions/' + slug, { slug: slug }, callback || logResponse);
 	},
 
 	getFriends: function (callback) {
 		"use strict";
 
-		this.twit.get('friends/ids', {}, callback);
+		this.twit.get('friends/ids', {}, callback || logResponse);
 	},
 
 	follow: function (userId, callback) {
 		"use strict";
 
-		this.twit.post('friendships/create', { user_id: userId }, callback);
+		this.twit.post('friendships/create', { user_id: userId }, callback || logResponse);
+	},
+
+	retweet: function (idStr, callback) {
+		"use strict";
+
+		this.twit.post('statuses/retweet/' + idStr, { id: idStr }, callback || logResponse);
 	},
 
 	retweetMostRecentPhoto: function () {
