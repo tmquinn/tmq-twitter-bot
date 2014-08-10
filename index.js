@@ -1,14 +1,5 @@
 var Twit = require('twit');
-
-var logResponse = function (err, response) {
-	"use strict";
-
-	if (err) {
-		console.log('ERROR:\n', err);
-	} else {
-		console.log(response);
-	}
-};
+var RSVP = require('rsvp');
 
 var TwitterBot = function (config) {
 	"use strict";
@@ -17,16 +8,49 @@ var TwitterBot = function (config) {
 };
 
 TwitterBot.prototype = {
-	getSlugs: function (callback) {
+
+	rateLimitStatus: function () {
 		"use strict";
 
-		this.twit.get('users/suggestions', {}, callback || logResponse);
+		return new RSVP.Promise(function (resolve, reject) {
+			this.twit.get('application/rate_limit_status', {}, function (err, response) {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(response);
+				}
+			});
+		}.bind(this));
 	},
 
-	suggestUsers: function (slug, callback) {
+	getSlugs: function () {
 		"use strict";
 
-		this.twit.get('users/suggestions/' + slug, { slug: slug }, callback || logResponse);
+		return new RSVP.Promise(function (resolve, reject) {
+			this.twit.get('users/suggestions', {}, function (err, response) {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(response);
+				}
+			});
+		}.bind(this));
+	},
+
+	suggestUsers: function (slug) {
+		"use strict";
+
+		return new RSVP.Promise(function (resolve, reject) {
+			this.twit.get('users/suggestions/' + slug,
+				{ slug: slug },
+				function (err, response) {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(response);
+					}
+				});
+		}.bind(this));
 	},
 
 	getFriends: function (callback) {
@@ -35,10 +59,22 @@ TwitterBot.prototype = {
 		this.twit.get('friends/ids', {}, callback || logResponse);
 	},
 
-	follow: function (userId, callback) {
+	follow: function (idStr) {
 		"use strict";
 
-		this.twit.post('friendships/create', { user_id: userId }, callback || logResponse);
+		return new RSVP.Promise(function (resolve, reject) {
+			this.twit.post('friendships/create',
+				{ user_id: idStr },
+				function (err, response) {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(response);
+					}
+				}
+			);
+		}.bind(this));
+
 	},
 
 	retweet: function (idStr, callback) {
