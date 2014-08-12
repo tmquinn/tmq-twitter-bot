@@ -47,6 +47,12 @@ var post = function (path, params, context) {
 
 TwitterBot.prototype = {
 
+	tweet: function (status) {
+		"use strict";
+
+		return post('statuses/update', { status: status }, this);
+	},
+
 	rateLimitStatus: function () {
 		"use strict";
 
@@ -71,10 +77,21 @@ TwitterBot.prototype = {
 		return get('friends/ids', this);
 	},
 
-	getFollowers: function () {
+	getFollowers: function (user) {
 		"use strict";
 
-		return get('followers/ids', this);
+		if (user) {
+			return get('followers/ids', { screen_name: user }, this);
+		} else {
+			return get('followers/ids', this);
+		}
+
+	},
+
+	getRetweets: function (tweetId) {
+		"use strict";
+
+		return get('statuses/retweets/' + tweetId, { id: tweetId, trim_user: true }, this);
 	},
 
 	follow: function (idStr) {
